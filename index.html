@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Habit & Streak Tracker - Developed by Lavish Tushir">
+  <title>Habit & Streak Tracker</title>
+  
+  <link rel="stylesheet" href="css/style.css?v=2.2">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏃</text></svg>">
+</head>
+<body>
+
+  <!-- Confetti Canvas for Milestone Celebrations -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- In-App Floating Toast Notification Container -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <div class="app-layout">
+    
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge">
+          <span class="brand-icon">🏃</span>
+          <div>
+            <div class="brand-title">Habit & Streak Tracker</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-link nav-active" data-nav-tab="dashboard">
+          <span class="nav-icon">⚡</span>
+          <span>Today's Focus</span>
+        </a>
+        <a href="#weekly" class="nav-link" data-nav-tab="weekly">
+          <span class="nav-icon">📊</span>
+          <span>Weekly Progress</span>
+        </a>
+        <a href="#analytics" class="nav-link" data-nav-tab="analytics">
+          <span class="nav-icon">📅</span>
+          <span>Heatmap & Calendar</span>
+        </a>
+        <a href="#timer" class="nav-link" data-nav-tab="timer">
+          <span class="nav-icon">⏱️</span>
+          <span>Focus Timer</span>
+        </a>
+        <a href="#journal" class="nav-link" data-nav-tab="journal">
+          <span class="nav-icon">📖</span>
+          <span>Habit Journal</span>
+        </a>
+        <a href="#habits" class="nav-link" data-nav-tab="habits">
+          <span class="nav-icon">📝</span>
+          <span>Manage Habits</span>
+        </a>
+        <a href="#settings" class="nav-link" data-nav-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings & Backup</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode">
+          <span id="theme-icon">☀️</span>
+          <span id="theme-label">Light Mode</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN APP SHELL -->
+    <main class="app-main">
+      
+      <!-- TOP HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          <h1>Habit & Streak Tracker</h1>
+        </div>
+
+        <div class="header-stats">
+          <!-- Level & XP Widget -->
+          <div class="header-gamification-group" title="Your Current Rank & XP">
+            <span id="header-level-badge" class="header-level-pill">Lvl 1 🌱</span>
+            <div class="header-xp-bar-box">
+              <div class="header-xp-bar">
+                <div id="header-xp-bar-fill" class="header-xp-fill" style="width: 25%;"></div>
+              </div>
+              <span id="header-xp-label" class="header-xp-label">0 XP</span>
+            </div>
+          </div>
+
+          <!-- Freezes pill -->
+          <div class="header-stat-pill" title="Available Emergency Streak Freezes">
+            <span id="header-freeze-count">❄️ 2</span>
+          </div>
+
+          <!-- Share Button -->
+          <button class="btn btn-secondary btn-sm" id="btn-header-share" title="Generate Shareable Streak Card">
+            <span>📸 Share Streak</span>
+          </button>
+
+          <!-- Today Counter -->
+          <div class="header-stat-pill" title="Habits completed today">
+            <span>Today:</span>
+            <strong id="stat-today-done">0/0</strong>
+          </div>
+
+          <!-- Streaks Counter -->
+          <div class="header-stat-pill" title="Total active streaks combined">
+            <strong id="stat-total-streaks">0 🔥</strong>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT VIEWS WRAPPER -->
+      <div class="content-wrapper">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="tab-view view-active">
+          <div id="dashboard-content">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </section>
+
+        <!-- 2. WEEKLY PROGRESS VIEW -->
+        <section id="view-weekly" class="tab-view">
+          <div id="weekly-content">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </section>
+
+        <!-- 3. HEATMAP & CALENDAR VIEW -->
+        <section id="view-analytics" class="tab-view">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Consistency Analytics</h2>
+              <p class="section-subtitle">Visualize your long-term discipline and monthly habit logs</p>
+            </div>
+          </div>
+
+          <div id="heatmap-container" class="card-glass"></div>
+          <div id="calendar-container"></div>
+          <div id="streak-leaderboard-container"></div>
+        </section>
+
+        <!-- 4. FOCUS & POMODORO TIMER VIEW -->
+        <section id="view-timer" class="tab-view">
+          <div id="timer-content">
+            <!-- Dynamically populated by timer.js -->
+          </div>
+        </section>
+
+        <!-- 5. HABIT JOURNAL & REFLECTIONS VIEW -->
+        <section id="view-journal" class="tab-view">
+          <div id="journal-content">
+            <!-- Dynamically populated by journal.js -->
+          </div>
+        </section>
+
+        <!-- 7. MANAGE HABITS VIEW -->
+        <section id="view-habits" class="tab-view">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">All Habits</h2>
+              <p class="section-subtitle">Create, customize, edit, and organize your daily routines</p>
+            </div>
+            <button class="btn btn-primary" id="btn-add-habit-top">
+              <span class="btn-icon">+</span> New Habit
+            </button>
+          </div>
+
+          <div id="habits-management-list">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </section>
+
+        <!-- 8. SETTINGS & BACKUP VIEW -->
+        <section id="view-settings" class="tab-view">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Settings & Audio Themes</h2>
+              <p class="section-subtitle">Manage preferences, notifications, sound packs, and offline data backups</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            
+            <!-- Audio Themes Pack Selector -->
+            <div class="card-glass settings-card">
+              <h3 class="section-title">🎵 Audio Sound Themes</h3>
+              
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label-title">Audio Feedback & Chimes</div>
+                  <div class="settings-label-sub">Play sound effects on check-ins and level ups</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-sound-toggle" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <!-- Sound Pack Radios with Preview Buttons -->
+              <div class="sound-packs-container">
+                <span class="settings-label-title" style="display: block; margin-bottom: 8px;">Select Chime Style:</span>
+                <div class="sound-pack-list">
+                  <div class="sound-pack-item">
+                    <label class="sound-pack-label">
+                      <input type="radio" name="sound-pack-radio" value="marimba" checked>
+                      <span>✨ Modern Marimba</span>
+                    </label>
+                    <button type="button" class="btn btn-secondary btn-sm btn-preview-sound" data-pack="marimba">🔊 Test</button>
+                  </div>
+                  <div class="sound-pack-item">
+                    <label class="sound-pack-label">
+                      <input type="radio" name="sound-pack-radio" value="arcade">
+                      <span>👾 8-Bit Retro Arcade</span>
+                    </label>
+                    <button type="button" class="btn btn-secondary btn-sm btn-preview-sound" data-pack="arcade">🔊 Test</button>
+                  </div>
+                  <div class="sound-pack-item">
+                    <label class="sound-pack-label">
+                      <input type="radio" name="sound-pack-radio" value="zen">
+                      <span>🧘 Zen Temple Bell</span>
+                    </label>
+                    <button type="button" class="btn btn-secondary btn-sm btn-preview-sound" data-pack="zen">🔊 Test</button>
+                  </div>
+                  <div class="sound-pack-item">
+                    <label class="sound-pack-label">
+                      <input type="radio" name="sound-pack-radio" value="scifi">
+                      <span>🚀 Sci-Fi Cyber Chime</span>
+                    </label>
+                    <button type="button" class="btn btn-secondary btn-sm btn-preview-sound" data-pack="scifi">🔊 Test</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label-title">Desktop Notifications</div>
+                  <div class="settings-label-sub" id="notif-permission-status">Status: Default</div>
+                </div>
+                <button class="btn btn-secondary btn-sm" id="btn-request-notif-perm">Enable Alerts</button>
+              </div>
+
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label-title">Test Notification System</div>
+                  <div class="settings-label-sub">Simulate a daily reminder alert right now</div>
+                </div>
+                <button class="btn btn-primary btn-sm" id="btn-test-notification">Test Alert 🔔</button>
+              </div>
+            </div>
+
+            <!-- Cloud / JSON Backup -->
+            <div class="card-glass settings-card">
+              <h3 class="section-title">💾 Cloud / JSON Backup</h3>
+              <p class="settings-label-sub">
+                Export all your habits, streak histories, XP, trophies, and journal reflections into a JSON file so your data is never lost.
+              </p>
+
+              <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="btn-export-backup">
+                  <span>📥 Export Backup JSON</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-import-backup">
+                  <span>📤 Restore From Backup</span>
+                </button>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;">
+              </div>
+            </div>
+
+            <!-- Data Management & Reset -->
+            <div class="card-glass settings-card">
+              <h3 class="section-title">⚙️ Data Management</h3>
+              
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label-title">Reset to Starter Demo Data</div>
+                  <div class="settings-label-sub">Load sample starter habits with active streaks & XP</div>
+                </div>
+                <button class="btn btn-secondary btn-sm" id="btn-reset-defaults">Load Demo</button>
+              </div>
+
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label-title">Clear All Habits</div>
+                  <div class="settings-label-sub">Erase all habits, journal notes, and streak records</div>
+                </div>
+                <button class="btn btn-danger btn-sm" id="btn-clear-all">Clear All</button>
+              </div>
+            </div>
+
+            <!-- Project Information -->
+            <div class="card-glass settings-card">
+              <h3 class="section-title">📋 Project Information</h3>
+              <div class="settings-label-sub" style="line-height: 1.8;">
+                <strong>Project:</strong> Habit & Streak Tracker<br>
+                <strong>Developer:</strong> Lavish Tushir<br>
+                <strong>Offline Storage:</strong> 100% Client-side LocalStorage (No Internet Needed)<br>
+                <strong>Features:</strong> Streaks, Gamification, Pomodoro, Journal & Share Card
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <nav class="mobile-nav-bar">
+      <a href="#dashboard" class="mobile-nav-item nav-active" data-nav-tab="dashboard">
+        <span class="mobile-nav-icon">⚡</span>
+        <span>Today</span>
+      </a>
+      <a href="#weekly" class="mobile-nav-item" data-nav-tab="weekly">
+        <span class="mobile-nav-icon">📊</span>
+        <span>Weekly</span>
+      </a>
+      <a href="#timer" class="mobile-nav-item" data-nav-tab="timer">
+        <span class="mobile-nav-icon">⏱️</span>
+        <span>Timer</span>
+      </a>
+      <a href="#journal" class="mobile-nav-item" data-nav-tab="journal">
+        <span class="mobile-nav-icon">📖</span>
+        <span>Journal</span>
+      </a>
+      <a href="#settings" class="mobile-nav-item" data-nav-tab="settings">
+        <span class="mobile-nav-icon">⚙️</span>
+        <span>Settings</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: CREATE / EDIT HABIT (With Flexible Frequency)
+       ======================================================================== -->
+  <div id="habit-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box card-glass">
+      <div class="modal-header">
+        <h3 class="modal-title" id="habit-modal-title">Create New Habit</h3>
+        <button class="modal-close-btn" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="habit-form">
+        <div class="form-group">
+          <label class="form-label" for="habit-form-title">Habit Title *</label>
+          <input type="text" id="habit-form-title" class="form-input" placeholder="e.g. Code for 45 Mins, Drink 2L Water" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="habit-form-desc">Motivation / Description</label>
+          <textarea id="habit-form-desc" class="form-textarea" placeholder="Why is this habit important to you?"></textarea>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="habit-form-category">Category</label>
+            <select id="habit-form-category" class="form-select">
+              <option value="Health">Health</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Learning">Learning</option>
+              <option value="Mindfulness">Mindfulness</option>
+              <option value="Productivity">Productivity</option>
+              <option value="Lifestyle">Lifestyle</option>
+            </select>
+          </div>
+
+          <!-- Flexible Target Frequency -->
+          <div class="form-group">
+            <label class="form-label" for="habit-form-frequency">Target Frequency</label>
+            <select id="habit-form-frequency" class="form-select">
+              <option value="daily">Every Day (7 days/wk)</option>
+              <option value="weekdays">Weekdays Only (Mon-Fri)</option>
+              <option value="weekends">Weekends Only (Sat-Sun)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Emoji Icon</label>
+          <input type="text" id="habit-form-emoji" class="form-input" value="⚡" style="display: none;">
+          <div class="emoji-palette">
+            <button type="button" class="emoji-picker-btn selected" data-emoji="⚡">⚡</button>
+            <button type="button" class="emoji-picker-btn" data-emoji="💧">💧</button>
+            <button type="button" class="emoji-picker-btn" data-emoji="💻">💻</button>
+            <button type="button" class="emoji-picker-btn" data-emoji="🏃">🏃</button>
+            <button type="button" class="emoji-picker-btn" data-emoji="📚">📚</button>
+            <button type="button" class="emoji-picker-btn" data-emoji="🧘">🧘</button>
+            <button type="button" class="emoji-picker-btn" data-emoji="🥗">🥗</button>
+            <button type="button" class="emoji-picker-btn" data-emoji="🎯">🎯</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Card Accent Color</label>
+          <input type="hidden" id="habit-form-color" value="#6366f1">
+          <div class="color-palette">
+            <button type="button" class="color-picker-btn selected" data-color="#6366f1" style="background: #6366f1;"></button>
+            <button type="button" class="color-picker-btn" data-color="#10b981" style="background: #10b981;"></button>
+            <button type="button" class="color-picker-btn" data-color="#06b6d4" style="background: #06b6d4;"></button>
+            <button type="button" class="color-picker-btn" data-color="#f59e0b" style="background: #f59e0b;"></button>
+            <button type="button" class="color-picker-btn" data-color="#ec4899" style="background: #ec4899;"></button>
+            <button type="button" class="color-picker-btn" data-color="#8b5cf6" style="background: #8b5cf6;"></button>
+            <button type="button" class="color-picker-btn" data-color="#ef4444" style="background: #ef4444;"></button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <label class="form-label" style="margin-bottom: 0;">Daily Reminder Alert</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="habit-form-reminder-enabled">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="form-row-2">
+            <input type="time" id="habit-form-reminder-time" class="form-input" value="09:00">
+            <span style="font-size: 0.78rem; color: var(--text-muted); align-self: center;">Daily reminder time</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-habit">Save Habit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: REFLECTION MICRO-NOTE
+       ======================================================================== -->
+  <div id="journal-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box card-glass">
+      <div class="modal-header">
+        <h3 class="modal-title">✍️ New Reflection Note</h3>
+        <button class="modal-close-btn" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Linked Habit</label>
+        <select id="journal-modal-habit-select" class="form-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">How are you feeling? (Mood Emoji)</label>
+        <select id="journal-modal-mood" class="form-select">
+          <option value="🚀">🚀 Energetic / High Momentum</option>
+          <option value="💪">💪 Strong / Proud</option>
+          <option value="🧘">🧘 Calm / Mindful</option>
+          <option value="🔥">🔥 On Fire / Unstoppable</option>
+          <option value="😴">😴 Tired but got it done</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Your Note / Insight</label>
+        <textarea id="journal-modal-text" class="form-textarea" placeholder="What went well today? Any reflections or breakthroughs?" rows="3"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-primary" id="btn-save-journal">Save Reflection (+15 XP)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: SHARE STREAK CARD GENERATOR
+       ======================================================================== -->
+  <div id="share-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box card-glass" style="max-width: 650px; text-align: center;">
+      <div class="modal-header">
+        <h3 class="modal-title">📸 Share Your Streak Card</h3>
+        <button class="modal-close-btn" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">
+        Here is your personalized high-resolution achievement snapshot ready to share!
+      </p>
+
+      <div class="share-card-canvas-wrapper">
+        <canvas id="share-card-canvas" class="share-preview-canvas"></canvas>
+      </div>
+
+      <div class="modal-actions" style="justify-content: center; margin-top: 18px;">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+        <button type="button" class="btn btn-primary" id="btn-download-share-card">
+          <span>📥 Download PNG Image</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: CONFIRM DELETE
+       ======================================================================== -->
+  <div id="delete-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box card-glass" style="max-width: 400px; text-align: center;">
+      <div style="font-size: 2.2rem; margin-bottom: 12px;">🗑️</div>
+      <h3 class="modal-title">Delete Habit?</h3>
+      <p style="color: var(--text-secondary); margin: 12px 0 20px; font-size: 0.9rem;">
+        Are you sure you want to delete <span id="delete-habit-name" style="font-weight: 700; color: var(--text-primary);"></span>? All streak records and past check-ins for this habit will be removed.
+      </p>
+      <div class="modal-actions" style="justify-content: center;">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-danger" id="btn-confirm-delete">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: DATE INSPECTION & RETROACTIVE CHECK-IN
+       ======================================================================== -->
+  <div id="date-inspection-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box card-glass" style="max-width: 500px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="date-modal-title">October 17, 2026</h3>
+          <p class="section-subtitle" id="date-modal-subtitle">Check-in Log</p>
+        </div>
+        <button class="modal-close-btn" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <div id="date-modal-habits-list" style="margin-top: 14px; max-height: 350px; overflow-y: auto;"></div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: AI VOICE CHECK-IN & TTS ASSISTANT
+       ======================================================================== -->
+  <div id="voice-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box card-glass voice-modal-box">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="voice-modal-header-icon">🎙️</div>
+          <div>
+            <h3 class="modal-title">AI Voice Check-In</h3>
+            <p class="section-subtitle" style="margin-bottom: 0;">Speak what you completed & AI updates your habits</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="voice-modal-body">
+        <!-- Big Animated Mic Button -->
+        <div class="voice-mic-container">
+          <button type="button" id="voice-mic-main-btn" class="voice-mic-btn" title="Click to start / stop speaking">
+            <span class="mic-icon">🎙️</span>
+            <div class="mic-pulse-ring"></div>
+            <div class="mic-pulse-ring-2"></div>
+          </button>
+        </div>
+
+        <!-- Audio Wave Bars Animation -->
+        <div id="voice-wave-animation" class="voice-wave-bars" style="display: none;">
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+        </div>
+
+        <!-- Status / Guidance Label -->
+        <div id="voice-status-label" class="voice-status-text">
+          Listening... Speak what you accomplished today!
+        </div>
+
+        <!-- Live Spoken Transcript -->
+        <div class="voice-transcript-card">
+          <div id="voice-transcript-text" class="voice-transcript-content">
+            “Listening... Speak now!”
+          </div>
+        </div>
+
+        <!-- Quick Sample Chips for One-Tap Check-In -->
+        <div class="voice-quick-chips">
+          <span class="quick-chip-label">Quick check-in suggestions (click or speak):</span>
+          <div class="chips-list">
+            <button type="button" class="voice-chip-btn" data-voice-phrase="I drank 2L water today">💧 Drank 2L water</button>
+            <button type="button" class="voice-chip-btn" data-voice-phrase="I coded for 45 mins">💻 Coded 45m</button>
+            <button type="button" class="voice-chip-btn" data-voice-phrase="I completed my workout">🏃 Workout / Gym</button>
+            <button type="button" class="voice-chip-btn" data-voice-phrase="I meditated for 10 minutes">🧘 Meditated</button>
+          </div>
+        </div>
+
+        <!-- Text Fallback Input Box -->
+        <div class="voice-text-fallback">
+          <label class="form-label" for="voice-text-input" style="font-size: 0.82rem; margin-bottom: 6px;">Or type what you accomplished:</label>
+          <div class="fallback-input-row">
+            <input type="text" id="voice-text-input" class="form-input" placeholder="e.g. I drank 2L water and coded for 45 mins">
+            <button type="button" class="btn btn-primary" id="btn-voice-submit-text">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="justify-content: flex-end; margin-top: 14px;">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js?v=2.2"></script>
+  <script src="js/streak.js?v=2.2"></script>
+  <script src="js/storage.js?v=2.2"></script>
+  <script src="js/notifications.js?v=2.2"></script>
+  <script src="js/gamification.js?v=2.2"></script>
+  <script src="js/timer.js?v=2.2"></script>
+  <script src="js/journal.js?v=2.2"></script>
+  <script src="js/share.js?v=2.2"></script>
+  <script src="js/voice.js?v=2.2"></script>
+  <script src="js/calendar.js?v=2.2"></script>
+  <script src="js/app.js?v=2.2"></script>
+
+</body>
+</html>

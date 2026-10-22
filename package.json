@@ -1,0 +1,17 @@
+{
+  "name": "habit-and-streak-tracker",
+  "version": "1.0.0",
+  "description": "Habit & Streak Tracker Web Application",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 server.py",
+    "serve": "npx serve ."
+  },
+  "keywords": [
+    "habit-tracker",
+    "streak-counter",
+    "offline-first"
+  ],
+  "author": "Lavish Tushir",
+  "license": "MIT"
+}
