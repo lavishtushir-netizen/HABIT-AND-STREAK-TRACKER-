@@ -8,12 +8,21 @@
  */
 
 const StorageManager = (() => {
-  const HABITS_KEY = 'hst_habits_v1';
+  const HABITS_KEY = 'hst_habits_v2';
   const THEME_KEY = 'hst_theme_v1';
   const SETTINGS_KEY = 'hst_settings_v1';
-  const GAMIFICATION_KEY = 'hst_gamification_v1';
-  const JOURNAL_KEY = 'hst_journal_v1';
+  const GAMIFICATION_KEY = 'hst_gamification_v2';
+  const JOURNAL_KEY = 'hst_journal_v2';
   const USER_KEY = 'hst_user_v1';
+
+  // Clear legacy pre-populated demo data so all users start 100% completely fresh
+  try {
+    if (localStorage.getItem('hst_habits_v1')) {
+      localStorage.removeItem('hst_habits_v1');
+      localStorage.removeItem('hst_gamification_v1');
+      localStorage.removeItem('hst_journal_v1');
+    }
+  } catch (e) {}
 
   /**
    * Generates a unique string ID
@@ -35,7 +44,7 @@ const StorageManager = (() => {
   }
 
   /**
-   * Seed data for fresh install / demo readiness
+   * Starter habits for fresh install - 100% clean with 0 completed dates (0% done)
    */
   function getSampleHabits() {
     return [
@@ -49,17 +58,9 @@ const StorageManager = (() => {
         frequency: 'daily',
         reminderTime: '09:00',
         reminderEnabled: true,
-        completedDates: [
-          relativeDate(-6),
-          relativeDate(-5),
-          relativeDate(-4),
-          relativeDate(-3),
-          relativeDate(-2),
-          relativeDate(-1),
-          relativeDate(0)
-        ],
+        completedDates: [],
         frozenDates: [],
-        createdAt: new Date(Date.now() - 7 * 86400000).toISOString()
+        createdAt: new Date().toISOString()
       },
       {
         id: 'seed_code',
@@ -71,15 +72,9 @@ const StorageManager = (() => {
         frequency: 'weekdays',
         reminderTime: '18:00',
         reminderEnabled: true,
-        completedDates: [
-          relativeDate(-4),
-          relativeDate(-3),
-          relativeDate(-2),
-          relativeDate(-1),
-          relativeDate(0)
-        ],
+        completedDates: [],
         frozenDates: [],
-        createdAt: new Date(Date.now() - 6 * 86400000).toISOString()
+        createdAt: new Date().toISOString()
       },
       {
         id: 'seed_workout',
@@ -91,13 +86,9 @@ const StorageManager = (() => {
         frequency: 'daily',
         reminderTime: '07:30',
         reminderEnabled: true,
-        completedDates: [
-          relativeDate(-3),
-          relativeDate(-2),
-          relativeDate(-1)
-        ],
+        completedDates: [],
         frozenDates: [],
-        createdAt: new Date(Date.now() - 5 * 86400000).toISOString()
+        createdAt: new Date().toISOString()
       },
       {
         id: 'seed_reading',
@@ -109,15 +100,9 @@ const StorageManager = (() => {
         frequency: 'daily',
         reminderTime: '21:30',
         reminderEnabled: false,
-        completedDates: [
-          relativeDate(-8),
-          relativeDate(-7),
-          relativeDate(-6),
-          relativeDate(-2),
-          relativeDate(-1)
-        ],
+        completedDates: [],
         frozenDates: [],
-        createdAt: new Date(Date.now() - 10 * 86400000).toISOString()
+        createdAt: new Date().toISOString()
       },
       {
         id: 'seed_meditation',
@@ -129,11 +114,9 @@ const StorageManager = (() => {
         frequency: 'daily',
         reminderTime: '22:00',
         reminderEnabled: true,
-        completedDates: [
-          relativeDate(-1)
-        ],
+        completedDates: [],
         frozenDates: [],
-        createdAt: new Date(Date.now() - 4 * 86400000).toISOString()
+        createdAt: new Date().toISOString()
       }
     ];
   }
@@ -312,8 +295,8 @@ const StorageManager = (() => {
    */
   function getGamification() {
     const defaults = {
-      xp: 140,
-      badges: ['first_step'],
+      xp: 0,
+      badges: [],
       streakFreezes: 2,
       usedFreezes: []
     };
@@ -339,26 +322,7 @@ const StorageManager = (() => {
    * Journal / Reflection Micro-Notes
    */
   function getJournalEntries() {
-    const defaults = [
-      {
-        id: 'journal_seed_1',
-        habitId: 'seed_code',
-        habitTitle: 'Code for 45 Mins',
-        dateStr: relativeDate(0),
-        text: 'Built the new gamification and focus timer engine! Felt productive and focused today.',
-        mood: '🚀',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'journal_seed_2',
-        habitId: 'seed_workout',
-        habitTitle: 'Morning Workout & Stretch',
-        dateStr: relativeDate(-1),
-        text: 'Morning mobility routine followed by 30 pushups. Energized for the whole day!',
-        mood: '💪',
-        createdAt: new Date(Date.now() - 86400000).toISOString()
-      }
-    ];
+    const defaults = [];
     try {
       const data = localStorage.getItem(JOURNAL_KEY);
       if (!data) {
@@ -394,14 +358,14 @@ const StorageManager = (() => {
   }
 
   /**
-   * Reset all data back to factory samples
+   * Reset all data back to factory samples (100% clean, 0% done)
    */
   function resetToDefaults() {
     const samples = getSampleHabits();
     saveHabits(samples);
     saveGamification({
-      xp: 140,
-      badges: ['first_step'],
+      xp: 0,
+      badges: [],
       streakFreezes: 2,
       usedFreezes: []
     });
