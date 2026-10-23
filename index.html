@@ -6,7 +6,7 @@
   <meta name="description" content="Habit & Streak Tracker - Developed by Lavish Tushir">
   <title>Habit & Streak Tracker</title>
   
-  <link rel="stylesheet" href="css/style.css?v=2.2">
+  <link rel="stylesheet" href="css/style.css?v=2.3">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏃</text></svg>">
 </head>
 <body>
@@ -16,6 +16,49 @@
 
   <!-- In-App Floating Toast Notification Container -->
   <div id="toast-container" aria-live="polite"></div>
+
+  <!-- ========================================================================
+       LOGIN & WELCOME SCREEN (Opens tracker with personal name)
+       ======================================================================== -->
+  <div id="login-screen" class="login-overlay">
+    <div class="login-card card-glass">
+      <div class="login-header">
+        <div class="login-brand-icon">🏃</div>
+        <h2 class="login-title">Habit & Streak Tracker</h2>
+        <p class="login-subtitle">Welcome! Enter your name to open your personalized habit tracker.</p>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-name-input">What's your name? *</label>
+          <input type="text" id="login-name-input" class="form-input login-input" placeholder="e.g. Lavish Tushir" required autocomplete="name" autofocus>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 22px;">
+          <label class="form-label" for="login-email-input">Email Address (Optional)</label>
+          <input type="email" id="login-email-input" class="form-input login-input" placeholder="e.g. lavish@example.com" autocomplete="email">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block login-submit-btn" id="btn-login-submit">
+          <span>Enter Tracker 🚀</span>
+        </button>
+
+        <div class="login-divider">
+          <span>OR</span>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-block login-demo-btn" id="btn-quick-login-lavish">
+          <span>⚡ Enter as Lavish Tushir</span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <span>🔒 100% Client-Side Privacy • Supabase Cloud Ready</span>
+        <br>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Developed by Lavish Tushir</span>
+      </div>
+    </div>
+  </div>
 
   <div class="app-layout">
     
@@ -110,6 +153,13 @@
           <div class="header-stat-pill" title="Total active streaks combined">
             <strong id="stat-total-streaks">0 🔥</strong>
           </div>
+
+          <!-- User Profile Badge & Switch User -->
+          <div class="header-user-badge" id="header-user-badge" title="Logged in user">
+            <span class="user-badge-icon">👤</span>
+            <span id="header-user-name" class="user-badge-name">Lavish Tushir</span>
+            <button type="button" id="btn-header-logout" class="btn-logout-mini" title="Sign out / Switch person">Switch</button>
+          </div>
         </div>
       </header>
 
@@ -186,6 +236,18 @@
 
           <div class="settings-grid">
             
+            <!-- Active User Profile Card -->
+            <div class="card-glass settings-card">
+              <h3 class="section-title">👤 Active User Profile</h3>
+              <div class="settings-row">
+                <div>
+                  <div class="settings-label-title" id="settings-user-display-name">Lavish Tushir</div>
+                  <div class="settings-label-sub" id="settings-user-display-email">Personalized local tracker session</div>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-settings-switch-user">Switch Person</button>
+              </div>
+            </div>
+
             <!-- Audio Themes Pack Selector -->
             <div class="card-glass settings-card">
               <h3 class="section-title">🎵 Audio Sound Themes</h3>
@@ -609,17 +671,17 @@
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.2"></script>
-  <script src="js/streak.js?v=2.2"></script>
-  <script src="js/storage.js?v=2.2"></script>
-  <script src="js/notifications.js?v=2.2"></script>
-  <script src="js/gamification.js?v=2.2"></script>
-  <script src="js/timer.js?v=2.2"></script>
-  <script src="js/journal.js?v=2.2"></script>
-  <script src="js/share.js?v=2.2"></script>
-  <script src="js/voice.js?v=2.2"></script>
-  <script src="js/calendar.js?v=2.2"></script>
-  <script src="js/app.js?v=2.2"></script>
+  <script src="js/supabase.js?v=2.3"></script>
+  <script src="js/streak.js?v=2.3"></script>
+  <script src="js/storage.js?v=2.3"></script>
+  <script src="js/notifications.js?v=2.3"></script>
+  <script src="js/gamification.js?v=2.3"></script>
+  <script src="js/timer.js?v=2.3"></script>
+  <script src="js/journal.js?v=2.3"></script>
+  <script src="js/share.js?v=2.3"></script>
+  <script src="js/voice.js?v=2.3"></script>
+  <script src="js/calendar.js?v=2.3"></script>
+  <script src="js/app.js?v=2.3"></script>
 
 </body>
 </html>

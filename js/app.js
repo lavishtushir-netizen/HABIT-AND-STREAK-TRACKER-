@@ -37,6 +37,7 @@ const App = (() => {
     setupTheme();
     setupNavigation();
     setupModals();
+    setupLoginSystem();
     setupBackupHandlers();
     setupCanvasConfetti();
 
@@ -46,8 +47,14 @@ const App = (() => {
     // Check badges on startup
     GamificationEngine.checkBadges();
 
-    // Render active view
-    render();
+    // Check if user is logged in
+    const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
+    if (!currentUser || !currentUser.name) {
+      showLoginScreen();
+    } else {
+      hideLoginScreen();
+      render();
+    }
 
     // Setup periodic midnight date rollover checker (every 10 minutes)
     let lastCheckedDate = StreakEngine.getToday();
@@ -55,7 +62,10 @@ const App = (() => {
       const currentDate = StreakEngine.getToday();
       if (currentDate !== lastCheckedDate) {
         lastCheckedDate = currentDate;
-        render();
+        const loggedUser = StorageManager.getCurrentUser();
+        if (loggedUser && loggedUser.name) {
+          render();
+        }
       }
     }, 600000);
   }
@@ -173,6 +183,12 @@ const App = (() => {
     if (totalHabitsEl) totalHabitsEl.textContent = habits.length;
     if (totalStreaksEl) totalStreaksEl.textContent = `${totalStreaks} 🔥`;
 
+    const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
+    const nameEl = document.getElementById('header-user-name');
+    if (nameEl) {
+      nameEl.textContent = (currentUser && currentUser.name) ? currentUser.name : 'Lavish Tushir';
+    }
+
     GamificationEngine.updateHeaderGamification();
   }
 
@@ -200,6 +216,11 @@ const App = (() => {
 
     // Quote
     const quoteObj = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
+
+    // Active User
+    const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
+    const displayName = currentUser && currentUser.name ? currentUser.name : 'Lavish Tushir';
+    const firstName = displayName.split(' ')[0] || 'Friend';
 
     // Stats for today
     let completedToday = 0;
@@ -235,7 +256,7 @@ const App = (() => {
         <div class="minimal-hero-top">
           <div class="minimal-hero-text">
             <div class="minimal-date-badge">${dateFormatted}</div>
-            <h2 class="minimal-greeting">${greeting}, Lavish! 👋</h2>
+            <h2 class="minimal-greeting">${greeting}, ${escapeHtml(firstName)}! 👋</h2>
             <p class="minimal-quote">“${quoteObj.quote}” <span class="quote-author">— ${quoteObj.author}</span></p>
           </div>
 
@@ -898,6 +919,90 @@ const App = (() => {
 
     if (notifStatusEl && ('Notification' in window)) {
       notifStatusEl.textContent = `Status: ${Notification.permission}`;
+    }
+
+    // Active User Profile Display in Settings
+    const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
+    const nameDisplay = document.getElementById('settings-user-display-name');
+    const emailDisplay = document.getElementById('settings-user-display-email');
+    if (nameDisplay) {
+      nameDisplay.textContent = (currentUser && currentUser.name) ? currentUser.name : 'Lavish Tushir';
+    }
+    if (emailDisplay) {
+      emailDisplay.textContent = (currentUser && currentUser.email) ? currentUser.email : 'Personalized local tracker session';
+    }
+  }
+
+  /**
+   * Login & User Identity System
+   */
+  function setupLoginSystem() {
+    const loginForm = document.getElementById('login-form');
+    const nameInput = document.getElementById('login-name-input');
+    const emailInput = document.getElementById('login-email-input');
+    const quickBtn = document.getElementById('btn-quick-login-lavish');
+    const logoutBtn = document.getElementById('btn-header-logout');
+    const settingsSwitchBtn = document.getElementById('btn-settings-switch-user');
+
+    loginForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = nameInput?.value.trim();
+      const email = emailInput?.value.trim() || '';
+      if (!name) return;
+
+      StorageManager.setCurrentUser({ name, email });
+      NotificationManager.showToast('Welcome!', `Logged in as ${name}`, 'success');
+      NotificationManager.playCheckinSound();
+      hideLoginScreen();
+      render();
+    });
+
+    quickBtn?.addEventListener('click', () => {
+      StorageManager.setCurrentUser({ name: 'Lavish Tushir', email: 'lavishtushir@example.com' });
+      NotificationManager.showToast('Welcome Back!', 'Logged in as Lavish Tushir', 'success');
+      NotificationManager.playCheckinSound();
+      hideLoginScreen();
+      render();
+    });
+
+    const handleLogout = () => {
+      StorageManager.clearCurrentUser();
+      NotificationManager.showToast('Signed Out', 'You can now enter with another name.', 'info');
+      showLoginScreen();
+    };
+
+    logoutBtn?.addEventListener('click', handleLogout);
+    settingsSwitchBtn?.addEventListener('click', handleLogout);
+  }
+
+  function showLoginScreen() {
+    const loginScreen = document.getElementById('login-screen');
+    const appLayout = document.querySelector('.app-layout');
+    if (loginScreen) {
+      loginScreen.style.display = 'flex';
+      loginScreen.classList.remove('login-fade-out');
+      const input = document.getElementById('login-name-input');
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 150);
+      }
+    }
+    if (appLayout) {
+      appLayout.style.display = 'none';
+    }
+  }
+
+  function hideLoginScreen() {
+    const loginScreen = document.getElementById('login-screen');
+    const appLayout = document.querySelector('.app-layout');
+    if (loginScreen) {
+      loginScreen.classList.add('login-fade-out');
+      setTimeout(() => {
+        loginScreen.style.display = 'none';
+      }, 300);
+    }
+    if (appLayout) {
+      appLayout.style.display = 'flex';
     }
   }
 

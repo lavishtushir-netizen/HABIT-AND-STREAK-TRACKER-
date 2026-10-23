@@ -237,7 +237,9 @@ const VoiceAssistant = (() => {
       }
 
       const spokenTitles = matchedHabits.map(h => h.title).join(' and ');
-      const responseSpeech = `Awesome job, Lavish! Marked ${spokenTitles} as completed for today.`;
+      const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
+      const firstName = (currentUser && currentUser.name) ? currentUser.name.trim().split(' ')[0] : 'friend';
+      const responseSpeech = `Awesome job, ${firstName}! Marked ${spokenTitles} as completed for today.`;
       
       updateVoiceUIState('success', `✅ Completed: ${newlyCheckedNames.join(', ')}`);
       speakResponse(responseSpeech);

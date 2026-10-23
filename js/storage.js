@@ -13,6 +13,7 @@ const StorageManager = (() => {
   const SETTINGS_KEY = 'hst_settings_v1';
   const GAMIFICATION_KEY = 'hst_gamification_v1';
   const JOURNAL_KEY = 'hst_journal_v1';
+  const USER_KEY = 'hst_user_v1';
 
   /**
    * Generates a unique string ID
@@ -487,6 +488,37 @@ const StorageManager = (() => {
     }
   }
 
+  /**
+   * User Session Management (Personalized Greeting)
+   */
+  function getCurrentUser() {
+    try {
+      const data = localStorage.getItem(USER_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setCurrentUser(user) {
+    try {
+      if (typeof user === 'string') {
+        user = { name: user };
+      }
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      return user;
+    } catch (e) {
+      console.error('Error saving user to localStorage:', e);
+      return user;
+    }
+  }
+
+  function clearCurrentUser() {
+    try {
+      localStorage.removeItem(USER_KEY);
+    } catch (e) {}
+  }
+
   return {
     generateId,
     getHabits,
@@ -507,7 +539,10 @@ const StorageManager = (() => {
     resetToDefaults,
     clearAllData,
     exportBackupJSON,
-    importBackupJSON
+    importBackupJSON,
+    getCurrentUser,
+    setCurrentUser,
+    clearCurrentUser
   };
 })();
 

@@ -89,9 +89,12 @@ const ShareCardModule = (() => {
     ctx.stroke();
 
     // --- 3. User Avatar & Title ---
+    const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
+    const shareName = (currentUser && currentUser.name) ? currentUser.name : 'Lavish Tushir';
+
     ctx.font = '800 32px system-ui, -apple-system, sans-serif';
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('Lavish Tushir', 44, 130);
+    ctx.fillText(shareName, 44, 130);
 
     ctx.font = '600 16px system-ui, -apple-system, sans-serif';
     ctx.fillStyle = '#10b981';
@@ -172,10 +175,14 @@ const ShareCardModule = (() => {
     const canvas = document.getElementById('share-card-canvas');
     if (!canvas) return;
 
+    const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
+    const rawName = (currentUser && currentUser.name) ? currentUser.name : 'streak';
+    const safeName = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'streak';
+
     const dataUrl = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = dataUrl;
-    a.download = `lavish-tushir-streak-${StreakEngine.getToday()}.png`;
+    a.download = `${safeName}-streak-${StreakEngine.getToday()}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
