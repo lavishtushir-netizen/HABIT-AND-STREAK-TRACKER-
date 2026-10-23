@@ -123,6 +123,7 @@ const VoiceAssistant = (() => {
     try {
       window.speechSynthesis.cancel(); // Stop any pending speech
       const utterance = new SpeechSynthesisUtterance(text);
+      utterance.volume = 1.0;
       utterance.rate = 1.05;
       utterance.pitch = 1.0;
       utterance.lang = 'en-US';

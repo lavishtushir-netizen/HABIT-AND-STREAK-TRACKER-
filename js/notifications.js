@@ -54,8 +54,8 @@ const NotificationManager = (() => {
           osc.frequency.setValueAtTime(freq, now + idx * 0.06);
 
           gain.gain.setValueAtTime(0, now + idx * 0.06);
-          gain.gain.linearRampToValueAtTime(0.12, now + idx * 0.06 + 0.01);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.15);
+          gain.gain.linearRampToValueAtTime(0.50, now + idx * 0.06 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.16);
 
           osc.connect(gain);
           gain.connect(ctx.destination);
@@ -64,7 +64,7 @@ const NotificationManager = (() => {
         });
 
       } else if (chosenPack === 'zen') {
-        // --- Zen Bell (Gentle Tibetan Singing Bowl Chime) ---
+        // --- Zen Bell (Gentle Tibetan Singing Bowl Chime - Amplified) ---
         const baseFreq = type === 'celebration' ? 528 : 432;
         const harmonics = [baseFreq, baseFreq * 1.5, baseFreq * 2.05];
         harmonics.forEach((freq, idx) => {
@@ -74,7 +74,7 @@ const NotificationManager = (() => {
           osc.frequency.setValueAtTime(freq, now);
 
           gain.gain.setValueAtTime(0, now);
-          gain.gain.linearRampToValueAtTime(0.16 / (idx + 1), now + 0.03);
+          gain.gain.linearRampToValueAtTime(0.70 / (idx + 1), now + 0.03);
           gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2 - idx * 0.2);
 
           osc.connect(gain);
@@ -84,7 +84,7 @@ const NotificationManager = (() => {
         });
 
       } else if (chosenPack === 'scifi') {
-        // --- Sci-Fi Cyber Chime (Frequency Sweep & Warp Ping) ---
+        // --- Sci-Fi Cyber Chime (Frequency Sweep & Warp Ping - Amplified) ---
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sawtooth';
@@ -97,7 +97,7 @@ const NotificationManager = (() => {
         osc.frequency.setValueAtTime(440, now);
         osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
 
-        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.setValueAtTime(0.65, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
 
         osc.connect(filter);
@@ -108,7 +108,7 @@ const NotificationManager = (() => {
         osc.stop(now + 0.4);
 
       } else {
-        // --- Default: Modern Crisp Marimba (Warm Sine Fanfare) ---
+        // --- Default: Modern Crisp Marimba (Warm Sine Fanfare - Amplified) ---
         const notes = type === 'celebration' ? [523.25, 659.25, 783.99, 1046.50] : [523.25, 659.25, 783.99];
         notes.forEach((freq, idx) => {
           const osc = ctx.createOscillator();
@@ -117,13 +117,13 @@ const NotificationManager = (() => {
           osc.frequency.setValueAtTime(freq, now + idx * 0.08);
 
           gain.gain.setValueAtTime(0, now + idx * 0.08);
-          gain.gain.linearRampToValueAtTime(0.2, now + idx * 0.08 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+          gain.gain.linearRampToValueAtTime(0.75, now + idx * 0.08 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.32);
 
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 0.32);
+          osc.stop(now + idx * 0.08 + 0.35);
         });
       }
     } catch (e) {

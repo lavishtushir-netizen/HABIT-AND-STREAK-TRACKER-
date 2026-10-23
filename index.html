@@ -6,7 +6,7 @@
   <meta name="description" content="Habit & Streak Tracker - Developed by Lavish Tushir">
   <title>Habit & Streak Tracker</title>
   
-  <link rel="stylesheet" href="css/style.css?v=2.4">
+  <link rel="stylesheet" href="css/style.css?v=2.5">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏃</text></svg>">
 </head>
 <body>
@@ -31,12 +31,17 @@
       <form id="login-form" class="login-form">
         <div class="form-group">
           <label class="form-label" for="login-name-input">What's your name? *</label>
-          <input type="text" id="login-name-input" class="form-input login-input" placeholder="e.g. Lavish Tushir" required autocomplete="name" autofocus>
+          <input type="text" id="login-name-input" class="form-input login-input" placeholder="Enter your name" required autocomplete="name" autofocus>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-age-input">Age *</label>
+          <input type="number" id="login-age-input" class="form-input login-input" placeholder="Enter your age" required min="1" max="120" inputmode="numeric">
         </div>
 
         <div class="form-group" style="margin-bottom: 22px;">
           <label class="form-label" for="login-email-input">Email Address (Optional)</label>
-          <input type="email" id="login-email-input" class="form-input login-input" placeholder="e.g. lavish@example.com" autocomplete="email">
+          <input type="email" id="login-email-input" class="form-input login-input" placeholder="Enter your email" autocomplete="email">
         </div>
 
         <button type="submit" class="btn btn-primary btn-block login-submit-btn" id="btn-login-submit">
@@ -47,8 +52,8 @@
           <span>OR</span>
         </div>
 
-        <button type="button" class="btn btn-secondary btn-block login-demo-btn" id="btn-quick-login-lavish">
-          <span>⚡ Enter as Lavish Tushir</span>
+        <button type="button" class="btn btn-secondary btn-block login-demo-btn" id="btn-quick-login-guest">
+          <span>👤 Login as Guest</span>
         </button>
       </form>
 
@@ -157,7 +162,7 @@
           <!-- User Profile Badge & Switch User -->
           <div class="header-user-badge" id="header-user-badge" title="Logged in user">
             <span class="user-badge-icon">👤</span>
-            <span id="header-user-name" class="user-badge-name">Lavish Tushir</span>
+            <span id="header-user-name" class="user-badge-name">Guest</span>
             <button type="button" id="btn-header-logout" class="btn-logout-mini" title="Sign out / Switch person">Switch</button>
           </div>
         </div>
@@ -241,7 +246,7 @@
               <h3 class="section-title">👤 Active User Profile</h3>
               <div class="settings-row">
                 <div>
-                  <div class="settings-label-title" id="settings-user-display-name">Lavish Tushir</div>
+                  <div class="settings-label-title" id="settings-user-display-name">Guest</div>
                   <div class="settings-label-sub" id="settings-user-display-email">Personalized local tracker session</div>
                 </div>
                 <button type="button" class="btn btn-secondary btn-sm" id="btn-settings-switch-user">Switch Person</button>
@@ -671,17 +676,17 @@
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=2.4"></script>
-  <script src="js/streak.js?v=2.4"></script>
-  <script src="js/storage.js?v=2.4"></script>
-  <script src="js/notifications.js?v=2.4"></script>
-  <script src="js/gamification.js?v=2.4"></script>
-  <script src="js/timer.js?v=2.4"></script>
-  <script src="js/journal.js?v=2.4"></script>
-  <script src="js/share.js?v=2.4"></script>
-  <script src="js/voice.js?v=2.4"></script>
-  <script src="js/calendar.js?v=2.4"></script>
-  <script src="js/app.js?v=2.4"></script>
+  <script src="js/supabase.js?v=2.5"></script>
+  <script src="js/streak.js?v=2.5"></script>
+  <script src="js/storage.js?v=2.5"></script>
+  <script src="js/notifications.js?v=2.5"></script>
+  <script src="js/gamification.js?v=2.5"></script>
+  <script src="js/timer.js?v=2.5"></script>
+  <script src="js/journal.js?v=2.5"></script>
+  <script src="js/share.js?v=2.5"></script>
+  <script src="js/voice.js?v=2.5"></script>
+  <script src="js/calendar.js?v=2.5"></script>
+  <script src="js/app.js?v=2.5"></script>
 
 </body>
 </html>

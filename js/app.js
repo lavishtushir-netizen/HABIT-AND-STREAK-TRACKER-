@@ -186,7 +186,7 @@ const App = (() => {
     const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
     const nameEl = document.getElementById('header-user-name');
     if (nameEl) {
-      nameEl.textContent = (currentUser && currentUser.name) ? currentUser.name : 'Lavish Tushir';
+      nameEl.textContent = (currentUser && currentUser.name) ? currentUser.name : 'Guest';
     }
 
     GamificationEngine.updateHeaderGamification();
@@ -219,7 +219,7 @@ const App = (() => {
 
     // Active User
     const currentUser = (typeof StorageManager !== 'undefined' && StorageManager.getCurrentUser) ? StorageManager.getCurrentUser() : null;
-    const displayName = currentUser && currentUser.name ? currentUser.name : 'Lavish Tushir';
+    const displayName = currentUser && currentUser.name ? currentUser.name : 'Guest';
     const firstName = displayName.split(' ')[0] || 'Friend';
 
     // Stats for today
@@ -926,10 +926,13 @@ const App = (() => {
     const nameDisplay = document.getElementById('settings-user-display-name');
     const emailDisplay = document.getElementById('settings-user-display-email');
     if (nameDisplay) {
-      nameDisplay.textContent = (currentUser && currentUser.name) ? currentUser.name : 'Lavish Tushir';
+      nameDisplay.textContent = (currentUser && currentUser.name) ? currentUser.name : 'Guest User';
     }
     if (emailDisplay) {
-      emailDisplay.textContent = (currentUser && currentUser.email) ? currentUser.email : 'Personalized local tracker session';
+      const details = [];
+      if (currentUser && currentUser.age) details.push(`Age: ${currentUser.age}`);
+      if (currentUser && currentUser.email) details.push(currentUser.email);
+      emailDisplay.textContent = details.length > 0 ? details.join(' • ') : 'Personalized local tracker session';
     }
   }
 
@@ -939,18 +942,32 @@ const App = (() => {
   function setupLoginSystem() {
     const loginForm = document.getElementById('login-form');
     const nameInput = document.getElementById('login-name-input');
+    const ageInput = document.getElementById('login-age-input');
     const emailInput = document.getElementById('login-email-input');
-    const quickBtn = document.getElementById('btn-quick-login-lavish');
+    const quickBtn = document.getElementById('btn-quick-login-guest') || document.getElementById('btn-quick-login-lavish');
     const logoutBtn = document.getElementById('btn-header-logout');
     const settingsSwitchBtn = document.getElementById('btn-settings-switch-user');
 
     loginForm?.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = nameInput?.value.trim();
+      const ageVal = ageInput?.value.trim();
+      const age = parseInt(ageVal, 10);
       const email = emailInput?.value.trim() || '';
-      if (!name) return;
 
-      StorageManager.setCurrentUser({ name, email });
+      if (!name) {
+        NotificationManager.showToast('Name Required', 'Please enter your name.', 'warning');
+        nameInput?.focus();
+        return;
+      }
+
+      if (!ageVal || isNaN(age) || age < 1 || age > 120) {
+        NotificationManager.showToast('Age Required', 'Please enter a valid age between 1 and 120.', 'warning');
+        ageInput?.focus();
+        return;
+      }
+
+      StorageManager.setCurrentUser({ name, age, email });
       NotificationManager.showToast('Welcome!', `Logged in as ${name}`, 'success');
       NotificationManager.playCheckinSound();
       hideLoginScreen();
@@ -958,8 +975,8 @@ const App = (() => {
     });
 
     quickBtn?.addEventListener('click', () => {
-      StorageManager.setCurrentUser({ name: 'Lavish Tushir', email: 'lavishtushir@example.com' });
-      NotificationManager.showToast('Welcome Back!', 'Logged in as Lavish Tushir', 'success');
+      StorageManager.setCurrentUser({ name: 'Guest User', age: 25, email: '' });
+      NotificationManager.showToast('Welcome!', 'Logged in as Guest', 'success');
       NotificationManager.playCheckinSound();
       hideLoginScreen();
       render();
@@ -981,11 +998,13 @@ const App = (() => {
     if (loginScreen) {
       loginScreen.style.display = 'flex';
       loginScreen.classList.remove('login-fade-out');
-      const input = document.getElementById('login-name-input');
-      if (input) {
-        input.value = '';
-        setTimeout(() => input.focus(), 150);
-      }
+      const nameInput = document.getElementById('login-name-input');
+      const ageInput = document.getElementById('login-age-input');
+      const emailInput = document.getElementById('login-email-input');
+      if (nameInput) nameInput.value = '';
+      if (ageInput) ageInput.value = '';
+      if (emailInput) emailInput.value = '';
+      setTimeout(() => nameInput?.focus(), 150);
     }
     if (appLayout) {
       appLayout.style.display = 'none';
